@@ -1,3 +1,5 @@
+from random import *
+import string
 """
 This module should use random module to generate_id
 """
@@ -15,6 +17,11 @@ def import_data_from_file(filename='class_data.txt'):
     :returns: list of lists representing students' data
     :rtype: list
     """
+    with open(filename, 'r') as filename:
+        students = filename.readlines()
+        students = [data.rstrip() for data in students]
+        students = [data.split(',') for data in students]
+    return students
 
 
 def export_to_file(data, filename='class_data.txt', mode='a'):
@@ -30,6 +37,16 @@ def export_to_file(data, filename='class_data.txt', mode='a'):
     :raises ValueError: if mode other than 'w' or 'a' was given. Error message:
         'Wrong write mode'
     """
+    data = str(data)
+    
+    if mode == 'a':
+        with open(filename, 'a') as filename:
+            filename.write(data)
+    elif mode == 'w':
+        with open(filename, 'w') as filename:
+            filename.write(data)
+    else:
+        raise ValueError('Wrong write mode')
 
 
 def get_student_by_id(uid, students):
@@ -45,6 +62,13 @@ def get_student_by_id(uid, students):
     :returns: specific student's data
     :rtype: list
     """
+    uid_index = 0
+
+    for data in students:
+        if data[uid_index] == uid:
+            return data
+        else:
+            raise ValueError('Student does not exist')
 
 
 def get_students_of_class(students, class_name):
@@ -58,6 +82,14 @@ def get_students_of_class(students, class_name):
     :returns: students from given class only
     :rtype: list
     """
+    class_index = 4
+    class_list = []
+
+    for data in students:
+        if data[class_index] == class_name:
+            class_list.append(data)
+    
+    return class_list
 
 
 def get_youngest_student(students):
@@ -73,6 +105,24 @@ def get_youngest_student(students):
     :returns: youngest student
     :rtype: list
     """
+    age_index = 3
+    youngest_student_age = 0
+    youngest_student = []
+
+    for data in students:
+        try:
+            data[age_index] = int(data[age_index])
+            if youngest_student_age == 0:
+                youngest_student_age = data[age_index]
+            elif data[age_index] >= youngest_student_age:
+                youngest_student_age = data[age_index]
+                data[age_index] = str(data[age_index])
+                youngest_student.append(data)
+        except TypeError:
+            pass
+
+    youngest_student = youngest_student[-1]
+    return youngest_student
 
 
 def get_youngest_student_of_class(students, class_name):
@@ -90,6 +140,25 @@ def get_youngest_student_of_class(students, class_name):
     :returns: youngest student from given class
     :rtype: list
     """
+    age_index = 3
+    class_index = 4
+    youngest_student_age = 0
+    youngest_student_of_class = []
+
+    for data in students:
+        try:
+            data[age_index] = int(data[age_index])
+            if youngest_student_age == 0:
+                youngest_student_age = data[age_index]
+            elif data[age_index] >= youngest_student_age and data[class_index] == class_name:
+                youngest_student_age = data[age_index]
+                data[age_index] = str(data[age_index])
+                youngest_student_of_class.append(data)
+        except TypeError:
+            pass
+
+    youngest_student_of_class = youngest_student_of_class[-1]
+    return youngest_student_of_class
 
 
 def get_oldest_student(students):
@@ -105,6 +174,24 @@ def get_oldest_student(students):
     :returns: oldest student
     :rtype: list
     """
+    age_index = 3
+    youngest_student_age = 0
+    youngest_student = []
+
+    for data in students:
+        try:
+            data[age_index] = int(data[age_index])
+            if youngest_student_age == 0:
+                youngest_student_age = data[age_index]
+            elif data[age_index] <= youngest_student_age:
+                youngest_student_age = data[age_index]
+                data[age_index] = str(data[age_index])
+                youngest_student.append(data)
+        except TypeError:
+            pass
+
+    youngest_student = youngest_student[-1]
+    return youngest_student
 
 
 def get_oldest_student_of_class(students, class_name):
@@ -122,6 +209,25 @@ def get_oldest_student_of_class(students, class_name):
     :returns: oldest student
     :rtype: list
     """
+    age_index = 3
+    class_index = 4
+    youngest_student_age = 0
+    youngest_student_of_class = []
+
+    for data in students:
+        try:
+            data[age_index] = int(data[age_index])
+            if youngest_student_age == 0:
+                youngest_student_age = data[age_index]
+            elif data[age_index] <= youngest_student_age and data[class_index] == class_name:
+                youngest_student_age = data[age_index]
+                data[age_index] = str(data[age_index])
+                youngest_student_of_class.append(data)
+        except TypeError:
+            pass
+
+    youngest_student_of_class = youngest_student_of_class[-1]
+    return youngest_student_of_class
 
 
 def get_average_grade_of_students(students):
@@ -137,6 +243,21 @@ def get_average_grade_of_students(students):
     :returns: average grade of students value
     :rtype: float
     """
+    average_grade_index = 5
+    average_grade_total = 0
+    total_number_of_students = 0
+    result = 0
+
+    for data in students:
+        try:
+            data[average_grade_index] = float(data[average_grade_index])
+            average_grade_total += data[average_grade_index]
+            total_number_of_students += 1
+        except TypeError:
+            pass
+
+    result = average_grade_total / total_number_of_students
+    return result
 
 
 def get_average_presence_of_students(students):
@@ -154,6 +275,21 @@ def get_average_presence_of_students(students):
     :returns: average presence of students rounded to int
     :rtype: int
     """
+    average_presence_index = 6
+    average_presence_total = 0
+    total_number_of_students = 0
+    result = 0
+
+    for data in students:
+        try:
+            data[average_presence_index] = int(data[average_presence_index])
+            average_presence_total += data[average_presence_index]
+            total_number_of_students += 1
+        except TypeError:
+            pass
+
+    result = average_presence_total / total_number_of_students
+    return result
 
 
 def generate_id(current_ids):
@@ -184,6 +320,23 @@ def generate_id(current_ids):
     :returns: unique id
     :rtype: str
     """
+    
+    lowercase_characters = string.ascii_lowercase
+    uppercase_characters = string.ascii_uppercase
+    digits = string.digits
+    special_characters = '!@#$%^&*()_+'
+
+    while True:
+        first_character = "".join(choice(uppercase_characters) for char in range(1))
+        second_character = "".join(choice(digits) for char in range(1))
+        third_character = "".join(choice(special_characters) for char in range(1))
+        fourth_character = "".join(choice(lowercase_characters) for char in range(1))
+        unique_id = first_character + second_character + third_character + fourth_character
+        if unique_id not in current_ids:
+            current_ids.append(unique_id)
+            return unique_id
+        else:
+            continue
 
 
 def get_all_by_gender(students, gender):
@@ -205,6 +358,22 @@ def get_all_by_gender(students, gender):
     :returns: list of students filtered by given gender
     :rtype: list
     """
+    students_by_gender = []
+    first_name_index = 1
+
+    for data in students:
+        if gender == 'female':
+            if data[first_name_index][-1] == 'a':
+                students_by_gender.append(data)
+            else:
+                continue
+        elif gender == 'male':
+            if data[first_name_index][-1] != 'a':
+                students_by_gender.append(data)
+        else:
+            raise ValueError('Wrong gender')
+
+    return students_by_gender
 
 
 def sort_students_by_age(students, order=None):
